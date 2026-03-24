@@ -1,13 +1,21 @@
+using APBD_TASK2.Enum;
+
 namespace APBD_TASK2.Models;
 
 public class User
 {
-    public int Id { get; set; } = 0;
+    private static int _idCounter = 1;
     
-    public string Name { get; set; } = null!;
-    
-    public string Surname { get; set; } = null!;
-    
-    public string Email { get; set; } = null!;
-    
+    public int Id { get; }
+    public string Name { get; set; }
+    public string Surname { get; set; }
+    public UserType UserType { get; set; }
+
+    public User(int id, string name, string surname, UserType userType)
+    {
+        Id = _idCounter++;
+        Name = name;
+        Surname = surname;
+        UserType = userType;
+    }
 }
