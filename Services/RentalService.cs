@@ -68,4 +68,21 @@ public class RentalService : IRentalService
         rental.Return(returnDate, penalty);
         rental.Equipment.Status = EquipmentStatus.Available;
     }
+
+    public List<Equipment> GetAllEquipment() => _equipment;
+
+    public List<Equipment> GetAvailableEquipment()
+    {
+        return _equipment.Where(e => e.IsAvailable).ToList();
+    }
+
+    public List<Rental> GetUserActiveRentals(int userId)
+    {
+        return _rentals.Where(r => r.User.Id == userId && !r.IsReturned).ToList();
+    }
+
+    public List<Rental> GetOverdueRentals()
+    {
+        return _rentals.Where(r => r.IsOverdue).ToList();
+    }
 }
