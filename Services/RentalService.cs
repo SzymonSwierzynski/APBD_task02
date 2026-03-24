@@ -52,4 +52,20 @@ public class RentalService : IRentalService
         _rentals.Add(rental);
         equipment.Status = EquipmentStatus.Rented;
     }
+
+    public void ReturnEquipment(int equipmentId)
+    {
+        var rental = _rentals.FirstOrDefault(r => r.Equipment.Id == equipmentId && !r.IsReturned);
+
+        if (rental == null)
+            throw new Exception("Active rental not found");
+
+        var returnDate = DateTime.Now;
+
+        rental.Return(returnDate, 0);
+        var penalty = CalculatePenalty(rental);
+
+        rental.Return(returnDate, penalty);
+        rental.Equipment.Status = EquipmentStatus.Available;
+    }
 }
