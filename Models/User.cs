@@ -11,7 +11,7 @@ public class User
     public string Surname { get; set; }
     public UserType UserType { get; set; }
 
-    public User(int id, string name, string surname, UserType userType)
+    public User(string name, string surname, UserType userType)
     {
         Id = _idCounter++;
         Name = name;
