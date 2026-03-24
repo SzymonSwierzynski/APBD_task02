@@ -1,3 +1,4 @@
+using APBD_TASK2.Enum;
 using APBD_TASK2.Interfaces;
 using APBD_TASK2.Models;
 
@@ -17,5 +18,21 @@ public class RentalService : IRentalService
     public void AddEquipment(Equipment equipment)
     {
         _equipment.Add(equipment);
+    }
+
+    private int GetUserLimit(User user)
+    {
+        return user.UserType == UserType.Student ? 2 : 5;
+    }
+    
+    priivate decimal CalculatePenalty(Rental rental)
+    {
+        if (rental.returnDate <= rental.DueDate) return 0;
+
+        int daysLate = (rental.returnDate.Value - rental.DueDate).Days;
+        return daysLate * 10;
+        {
+            
+        }
     }
 }
