@@ -25,14 +25,31 @@ public class RentalService : IRentalService
         return user.UserType == UserType.Student ? 2 : 5;
     }
     
-    priivate decimal CalculatePenalty(Rental rental)
+    private decimal CalculatePenalty(Rental rental)
     {
         if (rental.returnDate <= rental.DueDate) return 0;
 
         int daysLate = (rental.returnDate.Value - rental.DueDate).Days;
         return daysLate * 10;
-        {
-            
-        }
+    }
+
+    public void RentEquipment(int userId, int equipmentId, int days)
+    {
+        var user = _users.FirstOrDefault(u => u.Id == userId);
+        var equipment = _equipment.FirstOrDefault(e => e.Id == equipmentId);
+
+        if (user == null || equipment == null)
+            throw new Exception("User or equipment not found");
+        if (!equipment.IsAvailable)
+            throw new Exception("Equipment unavailable");
+
+        int activeRentals = _rentals.Count(r => r.User == user && !r.IsReturned);
+        if (activeRentals >= GetUserLimit(user))
+            throw new Exception("User exceeded rental limit");
+
+        var rental = new Rental(user, equipment, DateTime.Now, DateTime.Now.AddDays(days));
+        
+        _rentals.Add(rental);
+        equipment.Status = EquipmentStatus.Rented;
     }
 }
